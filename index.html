@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Unit Converter</title>
+  <meta name="description" content="A modern, responsive unit converter for length, weight, temperature, time, speed, area and volume." />
+
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ===================== BACKGROUND DECORATION ===================== -->
+  <div class="bg-blob blob-1"></div>
+  <div class="bg-blob blob-2"></div>
+  <div class="bg-blob blob-3"></div>
+
+  <!-- ===================== HEADER ===================== -->
+  <header class="app-header">
+    <div class="brand">
+      <span class="brand-icon">📐</span>
+      <h1>Smart Unit Converter</h1>
+    </div>
+
+    <button id="themeToggle" class="theme-toggle" title="Toggle Dark / Light Mode" aria-label="Toggle theme">
+      <span class="icon sun">☀️</span>
+      <span class="icon moon">🌙</span>
+    </button>
+  </header>
+
+  <!-- ===================== MAIN CONTENT ===================== -->
+  <main class="app-main">
+
+    <!-- ---------- Converter Card ---------- -->
+    <section class="card converter-card">
+
+      <!-- Category Tabs -->
+      <div class="category-tabs" id="categoryTabs">
+        <button class="tab active" data-category="length">📏 Length</button>
+        <button class="tab" data-category="weight">⚖️ Weight</button>
+        <button class="tab" data-category="temperature">🌡️ Temperature</button>
+        <button class="tab" data-category="time">⏱️ Time</button>
+        <button class="tab" data-category="speed">🚀 Speed</button>
+        <button class="tab" data-category="area">🟦 Area</button>
+        <button class="tab" data-category="volume">🧪 Volume</button>
+      </div>
+
+      <!-- Conversion Form -->
+      <form id="converterForm" class="converter-form" autocomplete="off">
+
+        <div class="field-group">
+          <label for="inputValue">Value</label>
+          <input
+            type="text"
+            id="inputValue"
+            inputmode="decimal"
+            placeholder="Enter a number e.g. 12.5"
+            aria-label="Value to convert"
+          />
+          <p class="error-msg" id="errorMsg"></p>
+        </div>
+
+        <div class="unit-row">
+          <div class="field-group">
+            <label for="fromUnit">From</label>
+            <select id="fromUnit"></select>
+          </div>
+
+          <button type="button" id="swapBtn" class="swap-btn" title="Swap units" aria-label="Swap units">
+            <span class="swap-icon">⇄</span>
+          </button>
+
+          <div class="field-group">
+            <label for="toUnit">To</label>
+            <select id="toUnit"></select>
+          </div>
+        </div>
+
+        <!-- Result -->
+        <div class="result-box" id="resultBox">
+          <div class="result-label">Result</div>
+          <div class="result-value" id="resultValue">—</div>
+          <button type="button" id="copyBtn" class="copy-btn" title="Copy result" aria-label="Copy result">📋 Copy</button>
+        </div>
+
+        <!-- Formula Display -->
+        <div class="formula-box" id="formulaBox">
+          <span class="formula-label">Formula:</span>
+          <span id="formulaText">Select units to see the formula</span>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-row">
+          <button type="button" id="resetBtn" class="btn btn-secondary">↺ Reset</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- ---------- History Card ---------- -->
+    <section class="card history-card">
+      <div class="history-header">
+        <h2>🕘 Conversion History</h2>
+        <button id="clearHistoryBtn" class="btn btn-danger-outline">🗑️ Clear</button>
+      </div>
+      <ul id="historyList" class="history-list">
+        <li class="history-empty">No conversions yet. Start converting above!</li>
+      </ul>
+    </section>
+
+  </main>
+
+  <!-- ===================== TOAST NOTIFICATION ===================== -->
+  <div id="toast" class="toast"></div>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="app-footer">
+    <p>
+      <strong>Smart Unit Converter</strong> &nbsp;|&nbsp;
+      Version <span id="appVersion">1.0</span> &nbsp;|&nbsp;
+      &copy; <span id="currentYear"></span>
+    </p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
