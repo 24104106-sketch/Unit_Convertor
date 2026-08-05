@@ -1,0 +1,33 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Clone Repository') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/24104106-sketch/Unit_Convertor.git'
+            }
+        }
+
+        stage('List Files') {
+            steps {
+                bat 'dir'
+            }
+        }
+
+        stage('Verify Project') {
+            steps {
+                bat 'if exist index.html echo index.html Found'
+                bat 'if exist style.css echo style.css Found'
+                bat 'if exist script.js echo script.js Found'
+            }
+        }
+
+        stage('Success') {
+            steps {
+                echo 'Smart Unit Converter Build Successful'
+            }
+        }
+    }
+}
