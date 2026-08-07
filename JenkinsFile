@@ -3,31 +3,78 @@ pipeline {
 
     stages {
 
-        stage('Clone Repository') {
+        stage('Checkout Source Code') {
             steps {
-                git branch: 'main',
-                    url: 'https://github.com/24104106-sketch/Unit_Convertor.git'
+                echo 'Checking out source code from GitHub...'
+                checkout scm
             }
         }
 
-        stage('List Files') {
+        stage('Display Project Files') {
             steps {
                 bat 'dir'
             }
         }
 
-        stage('Verify Project') {
+        stage('Verify HTML File') {
             steps {
-                bat 'if exist index.html echo index.html Found'
-                bat 'if exist style.css echo style.css Found'
-                bat 'if exist script.js echo script.js Found'
+                bat '''
+                if exist index.html (
+                    echo index.html Found
+                ) else (
+                    echo index.html Missing
+                    exit /b 1
+                )
+                '''
             }
         }
 
-        stage('Success') {
+        stage('Verify CSS File') {
             steps {
-                echo 'Smart Unit Converter Build Successful'
+                bat '''
+                if exist style.css (
+                    echo style.css Found
+                ) else (
+                    echo style.css Missing
+                    exit /b 1
+                )
+                '''
             }
+        }
+
+        stage('Verify JavaScript File') {
+            steps {
+                bat '''
+                if exist script.js (
+                    echo script.js Found
+                ) else (
+                    echo script.js Missing
+                    exit /b 1
+                )
+                '''
+            }
+        }
+
+        stage('Build Successful') {
+            steps {
+                echo '======================================='
+                echo 'Smart Unit Converter Build Successful'
+                echo '======================================='
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline completed successfully.'
+        }
+
+        failure {
+            echo 'Pipeline failed. Please check the errors.'
+        }
+
+        always {
+            echo 'Pipeline execution finished.'
         }
     }
 }
