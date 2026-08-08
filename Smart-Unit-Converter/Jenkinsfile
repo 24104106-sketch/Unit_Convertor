@@ -3,35 +3,44 @@ pipeline {
 
     stages {
 
-        stage('Checkout Source Code') {
+        stage('Checkout') {
             steps {
-                echo 'Checking out source code from GitHub...'
+                echo 'Checking out React project...'
                 checkout scm
-            }
-        }
-
-        stage('Display Project Files') {
-            steps {
-                bat 'dir'
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                echo 'Installing React dependencies...'
-                bat 'call npm install'
+                echo 'Installing dependencies...'
+                bat 'npm install'
             }
         }
 
         stage('Build React Project') {
             steps {
-                echo 'Building React project...'
-                bat 'call npm run build'
+                echo 'Building React + Vite project...'
+                bat 'npm run build'
+            }
+        }
+
+        stage('Verify Build') {
+            steps {
+                bat '''
+                if exist dist\\index.html (
+                    echo React production build found.
+                ) else (
+                    echo React production build missing.
+                    exit /b 1
+                )
+                '''
             }
         }
 
         stage('Deploy') {
             steps {
+                echo 'Deploying React build...'
+
                 bat '''
                 if not exist "C:\\ProgramData\\Jenkins.jenkins\\userContent\\smart-unit-converter" mkdir "C:\\ProgramData\\Jenkins.jenkins\\userContent\\smart-unit-converter"
 
@@ -39,23 +48,17 @@ pipeline {
                 '''
             }
         }
-
-        stage('Build Successful') {
-            steps {
-                echo '======================================='
-                echo 'Smart Unit Converter Build Successful'
-                echo '======================================='
-            }
-        }
     }
 
     post {
         success {
-            echo 'Pipeline completed successfully.'
+            echo '======================================'
+            echo 'SMART UNIT CONVERTER PIPELINE SUCCESS'
+            echo '======================================'
         }
 
         failure {
-            echo 'Pipeline failed. Please check the errors.'
+            echo 'Pipeline failed. Check the console output.'
         }
 
         always {
