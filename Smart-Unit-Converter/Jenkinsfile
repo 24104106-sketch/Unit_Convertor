@@ -16,41 +16,26 @@ pipeline {
             }
         }
 
-        stage('Verify HTML File') {
+        stage('Install Dependencies') {
             steps {
-                bat '''
-                if exist index.html (
-                    echo index.html Found
-                ) else (
-                    echo index.html Missing
-                    exit /b 1
-                )
-                '''
+                echo 'Installing React dependencies...'
+                bat 'call npm install'
             }
         }
 
-        stage('Verify CSS File') {
+        stage('Build React Project') {
             steps {
-                bat '''
-                if exist style.css (
-                    echo style.css Found
-                ) else (
-                    echo style.css Missing
-                    exit /b 1
-                )
-                '''
+                echo 'Building React project...'
+                bat 'call npm run build'
             }
         }
 
-        stage('Verify JavaScript File') {
+        stage('Deploy') {
             steps {
                 bat '''
-                if exist script.js (
-                    echo script.js Found
-                ) else (
-                    echo script.js Missing
-                    exit /b 1
-                )
+                if not exist "C:\\ProgramData\\Jenkins.jenkins\\userContent\\smart-unit-converter" mkdir "C:\\ProgramData\\Jenkins.jenkins\\userContent\\smart-unit-converter"
+
+                xcopy /E /I /Y "dist\\*" "C:\\ProgramData\\Jenkins.jenkins\\userContent\\smart-unit-converter\\"
                 '''
             }
         }
