@@ -1,0 +1,80 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Checkout Source Code') {
+            steps {
+                echo 'Checking out source code from GitHub...'
+                checkout scm
+            }
+        }
+
+        stage('Display Project Files') {
+            steps {
+                bat 'dir'
+            }
+        }
+
+        stage('Verify HTML File') {
+            steps {
+                bat '''
+                if exist index.html (
+                    echo index.html Found
+                ) else (
+                    echo index.html Missing
+                    exit /b 1
+                )
+                '''
+            }
+        }
+
+        stage('Verify CSS File') {
+            steps {
+                bat '''
+                if exist style.css (
+                    echo style.css Found
+                ) else (
+                    echo style.css Missing
+                    exit /b 1
+                )
+                '''
+            }
+        }
+
+        stage('Verify JavaScript File') {
+            steps {
+                bat '''
+                if exist script.js (
+                    echo script.js Found
+                ) else (
+                    echo script.js Missing
+                    exit /b 1
+                )
+                '''
+            }
+        }
+
+        stage('Build Successful') {
+            steps {
+                echo '======================================='
+                echo 'Smart Unit Converter Build Successful'
+                echo '======================================='
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline completed successfully.'
+        }
+
+        failure {
+            echo 'Pipeline failed. Please check the errors.'
+        }
+
+        always {
+            echo 'Pipeline execution finished.'
+        }
+    }
+}
