@@ -12,44 +12,53 @@ pipeline {
         stage('Display Project Files') {
             steps {
                 bat 'dir'
+                bat 'dir Smart-Unit-Converter'
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                bat 'npm install'
+                dir('Smart-Unit-Converter') {
+                    bat 'npm install'
+                }
             }
         }
 
         stage('Build React Application') {
             steps {
-                bat 'npm run build'
+                dir('Smart-Unit-Converter') {
+                    bat 'npm run build'
+                }
             }
         }
 
         stage('Verify Build') {
             steps {
-                bat '''
-                if exist dist\\index.html (
-                    echo React Vite build successful
-                    echo dist\\index.html found
-                ) else (
-                    echo Build failed - dist\\index.html missing
-                    exit /b 1
-                )
-                '''
+                dir('Smart-Unit-Converter') {
+                    bat '''
+                    if exist dist\\index.html (
+                        echo React Vite build successful
+                        echo dist\\index.html found
+                    ) else (
+                        echo Build failed - dist\\index.html missing
+                        exit /b 1
+                    )
+                    '''
+                }
             }
         }
 
         stage('Deploy') {
             steps {
-                bat '''
-                if not exist "C:\\ProgramData\\Jenkins.jenkins\\userContent\\smart-unit-converter" (
-                    mkdir "C:\\ProgramData\\Jenkins.jenkins\\userContent\\smart-unit-converter"
-                )
+                dir('Smart-Unit-Converter') {
+                    bat '''
+                    if not exist "C:\\ProgramData\\Jenkins.jenkins\\userContent\\smart-unit-converter" (
+                        mkdir "C:\\ProgramData\\Jenkins.jenkins\\userContent\\smart-unit-converter"
+                    )
 
-                xcopy /E /I /Y "dist\\*" "C:\\ProgramData\\Jenkins.jenkins\\userContent\\smart-unit-converter\\"
-                '''
+                    xcopy /E /I /Y "dist\\*" "C:\\ProgramData\\Jenkins.jenkins\\userContent\\smart-unit-converter\\"
+                    '''
+                }
             }
         }
     }
