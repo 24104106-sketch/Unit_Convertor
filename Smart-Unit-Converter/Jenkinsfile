@@ -49,27 +49,26 @@ pipeline {
         }
 
         stage('Deploy') {
-    steps {
-        dir('Smart-Unit-Converter') {
-            archiveArtifacts artifacts: 'dist/**', fingerprint: true
+            steps {
+                dir('Smart-Unit-Converter') {
+                    archiveArtifacts artifacts: 'dist/**', fingerprint: true
 
-            echo '=========================================='
-            echo 'React application deployed as Jenkins artifact.'
-            echo '=========================================='
+                    echo '=========================================='
+                    echo 'React application deployed as Jenkins artifact.'
+                    echo '=========================================='
+                }
+            }
         }
     }
-}
-
-        
 
     post {
 
         success {
             echo '=========================================='
             echo 'PIPELINE SUCCESS'
-            echo 'Smart Unit Converter deployed successfully.'
+            echo 'Smart Unit Converter built successfully.'
+            echo 'Build artifacts are available in Jenkins.'
             echo '=========================================='
-            echo 'Open: http://localhost:8080/userContent/smart-unit-converter/'
         }
 
         failure {
