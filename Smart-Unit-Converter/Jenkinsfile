@@ -57,22 +57,45 @@ pipeline {
                     )
 
                     xcopy /E /I /Y "dist\\*" "C:\\ProgramData\\Jenkins.jenkins\\userContent\\smart-unit-converter\\"
+
+                    echo ==========================================
+                    echo React application deployed successfully.
+                    echo ==========================================
                     '''
                 }
+            }
+        }
+
+        stage('Verify Deployment') {
+            steps {
+                bat '''
+                if exist "C:\\ProgramData\\Jenkins.jenkins\\userContent\\smart-unit-converter\\index.html" (
+                    echo Deployment verified successfully.
+                    echo index.html found in Jenkins userContent.
+                ) else (
+                    echo Deployment verification failed.
+                    exit /b 1
+                )
+                '''
             }
         }
     }
 
     post {
+
         success {
-            echo '======================================='
-            echo 'Smart Unit Converter - BUILD SUCCESS'
-            echo '======================================='
-            echo 'React application deployed successfully.'
+            echo '=========================================='
+            echo 'PIPELINE SUCCESS'
+            echo 'Smart Unit Converter deployed successfully.'
+            echo '=========================================='
+            echo 'Open: http://localhost:8080/userContent/smart-unit-converter/'
         }
 
         failure {
-            echo 'Pipeline failed. Check the console output.'
+            echo '=========================================='
+            echo 'PIPELINE FAILED'
+            echo 'Check the console output for errors.'
+            echo '=========================================='
         }
 
         always {
