@@ -3,48 +3,73 @@ pipeline {
 
     stages {
 
-        stage('Checkout') {
+        stage('Checkout Source Code') {
             steps {
-                echo 'Checking out React project...'
+                echo 'Checking out React project from GitHub...'
                 checkout scm
             }
         }
 
-        stage('Install Dependencies') {
-            steps {
-                echo 'Installing dependencies...'
-                bat 'npm install'
-            }
-        }
-
-        stage('Build React Project') {
-            steps {
-                echo 'Building React + Vite project...'
-                bat 'npm run build'
-            }
-        }
-
-        stage('Verify Build') {
+        stage('Display Project Files') {
             steps {
                 bat '''
-                if exist dist\\index.html (
-                    echo React production build found.
+                echo ===== ROOT FILES =====
+                dir
+
+                echo ===== REACT PROJECT FILES =====
+                dir Smart-Unit-Converter
+                '''
+            }
+        }
+
+        stage('Verify React Project') {
+            steps {
+                bat '''
+                if exist "Smart-Unit-Converter\\package.json" (
+                    echo package.json Found
                 ) else (
-                    echo React production build missing.
+                    echo package.json Missing
+                    exit /b 1
+                )
+
+                if exist "Smart-Unit-Converter\\src" (
+                    echo src folder Found
+                ) else (
+                    echo src folder Missing
                     exit /b 1
                 )
                 '''
             }
         }
 
-        stage('Deploy') {
+        stage('Install Dependencies') {
             steps {
-                echo 'Deploying React build...'
-
                 bat '''
-                if not exist "C:\\ProgramData\\Jenkins.jenkins\\userContent\\smart-unit-converter" mkdir "C:\\ProgramData\\Jenkins.jenkins\\userContent\\smart-unit-converter"
+                cd Smart-Unit-Converter
+                call npm ci
+                '''
+            }
+        }
 
-                xcopy /E /I /Y "dist\\*" "C:\\ProgramData\\Jenkins.jenkins\\userContent\\smart-unit-converter\\"
+        stage('Build React Application') {
+            steps {
+                bat '''
+                cd Smart-Unit-Converter
+                call npm run build
+                '''
+            }
+        }
+
+        stage('Verify Build') {
+            steps {
+                bat '''
+                if exist "Smart-Unit-Converter\\dist\\index.html" (
+                    echo React build successful
+                    echo dist/index.html Found
+                ) else (
+                    echo React build failed
+                    exit /b 1
+                )
                 '''
             }
         }
@@ -53,12 +78,12 @@ pipeline {
     post {
         success {
             echo '======================================'
-            echo 'SMART UNIT CONVERTER PIPELINE SUCCESS'
+            echo 'React Smart Unit Converter SUCCESS'
             echo '======================================'
         }
 
         failure {
-            echo 'Pipeline failed. Check the console output.'
+            echo 'React build failed. Check Console Output.'
         }
 
         always {
